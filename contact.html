@@ -79,12 +79,12 @@
          <img src="images/contact-img.svg" alt="">
       </div>
 
-      <form action="http://localhost:3000/submit-form" method="post">
+      <form id="contactForm" enctype="multipart/form-data">
          <h3>Contact Us</h3>
-         <input type="text" placeholder="enter your name" name="name" required maxlength="50" class="box">
-         <input type="email" placeholder="enter your email" name="email" required maxlength="50" class="box">
-         <input type="number" placeholder="enter your number" name="number" required maxlength="50" class="box">
-         <textarea name="msg" class="box" placeholder="enter your message" required maxlength="1000" cols="30" rows="10"></textarea>
+         <input type="text" id="name" placeholder="enter your name" name="name" required maxlength="50" class="box">
+         <input type="email" id="email" placeholder="enter your email" name="email" required maxlength="50" class="box">
+         <input type="number" id="number" placeholder="enter your number" name="number" required maxlength="50" class="box">
+         <textarea name="msg" id="msg" class="box" placeholder="enter your message" required maxlength="1000" cols="30" rows="10"></textarea>
          <input type="submit" value="send message" class="inline-btn" name="submit">
       </form>
 
@@ -117,6 +117,49 @@
 
 </section>
 
+<script>
+   document.getElementById('contactForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      // Get form data
+      const formData = new FormData(this);
+
+      // Convert formData to JSON
+      const jsonData = {};
+      formData.forEach((value, key) => {
+         jsonData[key] = value;
+      });
+
+      // Send form data to API endpoint
+      fetch('http://localhost:3000/submit-form', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(jsonData)
+      })
+      .then(response => {
+         if (!response.ok) {
+            throw new Error('Network response was not ok');
+         }
+         return response.text();
+      })
+      .then(data => {
+         alert(data);
+         //set all fields empty
+         document.getElementById('name').value = '';
+         document.getElementById('email').value = '';
+         document.getElementById('number').value = '';
+         document.getElementById('msg').value = '';
+         console.log(data); // Log the response from the server
+         // You can add any further processing here, like showing a success message to the user
+      })
+      .catch(error => {
+         console.error('There was a problem with your fetch operation:', error);
+         // You can handle errors here, like showing an error message to the user
+      });
+   });
+</script>
    
 </body>
 </html>

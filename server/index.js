@@ -1,9 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 // Initialize Express app
 const app = express();
+app.use(cors());
 
 // Connect to MongoDB
 mongoose
@@ -38,6 +40,7 @@ app.use(express.static("public")); // Assuming your HTML files are in a 'public'
 // Route to handle form submission
 app.post("/register", (req, res) => {
   const { name, email, pass, c_pass } = req.body;
+  console.log(req.body);
 
   // Check if passwords match
   if (pass !== c_pass) {
@@ -61,6 +64,8 @@ app.post("/register", (req, res) => {
 app.post('/submit-form', (req, res) => {
   const { name, email, number, msg } = req.body;
 
+  console.log(req.body);
+  
   // Create a new contact object
   const newContact = new Contact({
     name,
